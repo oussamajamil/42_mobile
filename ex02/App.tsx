@@ -7,11 +7,19 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { ClavieCalcul } from "./src/constant/calcul";
-
+import {
+  ClavieCalculPortrait,
+  ClavieCalculLandscape,
+} from "./src/constant/calcul";
+import { useDeviceOrientation } from "@react-native-community/hooks";
+import { DeleteIcon } from "lucide-react-native";
+import { calculate } from "./src/utils/function";
 export default function App() {
   const width = Dimensions.get("window").width;
   const [equation, setEquation] = useState("0");
+  const [result, setResult] = useState(0);
+  const landscape = useDeviceOrientation();
+
   return (
     <SafeAreaView
       className="flex  justify-center gap-4"
@@ -26,46 +34,57 @@ export default function App() {
           Calculate
         </Text>
       </View>
-      <View className="flex flex-1   w-[90%] justify-end">
-        <Text className="text-white  text-3xl font-bold  text-right ">
+      <View className={`flex flex-1  bg-black/20 px-4 justify-end rounded-sn`}>
+        <Text
+          className={`text-white  text-2xl font-bold  text-right px-[${
+            landscape !== "portrait" ? 10 : 0
+          }] `}
+        >
           {equation}
         </Text>
-        <Text className="text-white  text-2xl font-bold text-right ">
-          hello
+        <Text className="text-white  text-xl font-bold text-right ">
+          = {result}
         </Text>
       </View>
-      <View className="w-full flex-row flex-wrap gap-4  items-center flex  ">
-        {ClavieCalcul.map((item, index) => {
+      <View className="w-full flex-row flex-wrap gap-4   items-center flex">
+        {(landscape === "portrait"
+          ? ClavieCalculPortrait
+          : ClavieCalculLandscape
+        ).map((item, index) => {
           return (
             <TouchableOpacity
               style={{
-                width: width / 4 - 20,
-                height: width / 4 - 20,
+                width:
+                  landscape !== "portrait" ? width / 6 - 10 : width / 4 - 20,
+                height: landscape !== "portrait" ? 40 : width / 4 - 20,
                 backgroundColor: item.background || "gray",
+                padding: landscape !== "portrait" ? 5 : 16,
               }}
               key={index}
-              className="bg-gray-800/20 py-4 items-center justify-center rounded-full"
+              className="items-center justify-center rounded-full opacity-90"
               onPress={() => {
-                console.log(item);
-                if (item.type === "number" || item.type === "operator") {
-                  console.log("number");
-                  setEquation((prev) => prev + item.value);
-                }
+                /// function to calculate
               }}
             >
               <Text
-                className="text-white text-2xl font-bold"
                 style={{
                   color: item.color || "white",
+                  fontSize: landscape !== "portrait" ? 25 : 35,
                 }}
               >
-                {item.value}
+                {item.value !== "C" ? (
+                  item.value
+                ) : (
+                  <DeleteIcon
+                    size={landscape > "portrait" ? 25 : 35}
+                    color="orange"
+                  />
+                )}
               </Text>
             </TouchableOpacity>
           );
         })}
       </View>
-      {/* hello */}
       <StatusBar style="auto" />
     </SafeAreaView>
   );

@@ -25,7 +25,6 @@ export default function App() {
       >
         <Text className="text-white text-xl ">click me</Text>
       </TouchableOpacity>
-      {/*  */}
     </SafeAreaView>
   );
 }
