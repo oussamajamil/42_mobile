@@ -30,7 +30,7 @@ export default function App() {
         </Text>
       </View>
       <View
-        className={`flex flex-1  bg-black/20 px-4 justify-end rounded-sn min-h-[10rem] `}
+        className={`flex flex-1   bg-black/20 px-4 justify-end rounded-sn min-h-[10rem] `}
       >
         <Text
           className={`text-white  text-2xl font-bold  text-right px-[${
@@ -39,8 +39,8 @@ export default function App() {
         >
           {equation}
         </Text>
-        <Text className="text-white  text-xl font-bold text-right ">
-          {result === "hidden" ? "" : "=" + result + ""}
+        <Text className="text-gray-600  text-xl font-bold text-right  ">
+          {result === "hidden" ? "" : result + ""}
         </Text>
       </View>
       <View
