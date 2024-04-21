@@ -1,11 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  Dimensions,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import {
   ClavieCalculPortrait,
@@ -14,6 +8,7 @@ import {
 import { useDeviceOrientation } from "@react-native-community/hooks";
 import { DeleteIcon } from "lucide-react-native";
 import { calculate } from "./src/utils/function";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function App() {
   const width = Dimensions.get("window").width;
   const [equation, setEquation] = useState("0");
@@ -22,19 +17,21 @@ export default function App() {
 
   return (
     <SafeAreaView
-      className="flex  justify-center gap-4"
+      className="flex  justify-center"
       style={{
         flex: 1,
         backgroundColor: "black",
         opacity: 0.8,
       }}
     >
-      <View className="border text-left  w-full p-4 bg-gray-400/20">
+      <View className="text-left  w-full p-4 bg-gray-400/20">
         <Text className="text-white text-xl shadow z-10 font-bold">
           Calculate
         </Text>
       </View>
-      <View className={`flex flex-1  bg-black/20 px-4 justify-end rounded-sn`}>
+      <View
+        className={`flex flex-1  bg-black/20 px-4 justify-end rounded-sn min-h-[10rem] `}
+      >
         <Text
           className={`text-white  text-2xl font-bold  text-right px-[${
             landscape !== "portrait" ? 10 : 0
@@ -46,7 +43,12 @@ export default function App() {
           {result === "hidden" ? "" : "=" + result + ""}
         </Text>
       </View>
-      <View className="w-full flex-row flex-wrap gap-4   items-center flex">
+      <View
+        className="w-full flex-row flex-wrap gap-2 justify-center    items-center flex mt-6"
+        style={{
+          gap: landscape === "portrait" ? 5 : 1,
+        }}
+      >
         {(landscape === "portrait"
           ? ClavieCalculPortrait
           : ClavieCalculLandscape
@@ -55,13 +57,12 @@ export default function App() {
             <TouchableOpacity
               style={{
                 width:
-                  landscape !== "portrait" ? width / 6 - 10 : width / 4 - 20,
-                height: landscape !== "portrait" ? 40 : width / 4 - 20,
+                  landscape !== "portrait" ? width / 5 - 10 : width / 4 - 20,
+                height: landscape !== "portrait" ? 30 : width / 4 - 20,
                 backgroundColor: item.background || "gray",
-                padding: landscape !== "portrait" ? 5 : 16,
               }}
               key={index}
-              className="items-center justify-center rounded-full opacity-90"
+              className="items-center justify-center  rounded-full opacity-90"
               onPress={() => {
                 calculate(
                   item.type,
@@ -75,14 +76,14 @@ export default function App() {
               <Text
                 style={{
                   color: item.color || "white",
-                  fontSize: landscape !== "portrait" ? 25 : 35,
+                  fontSize: landscape !== "portrait" ? 20 : 25,
                 }}
               >
                 {item.value !== "C" ? (
                   item.value
                 ) : (
                   <DeleteIcon
-                    size={landscape > "portrait" ? 25 : 35}
+                    size={landscape === "portrait" ? 25 : 15}
                     color="orange"
                   />
                 )}
