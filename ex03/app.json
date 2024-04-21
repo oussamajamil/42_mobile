@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ex00",
-    "slug": "ex00",
+    "name": "ex03",
+    "slug": "ex03",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ojamil.ex03"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "55f48ba6-425a-4d9b-9ada-967bc4d7dc15"
+      }
     }
   }
 }

@@ -6,7 +6,7 @@
         {type: 'number', value: '7'},
         {type: 'number', value: '8'},
         {type: 'number', value: '9'},
-        { type: 'multiply', value: '*' ,color:'orange' },
+        { type: 'operation', value: '*' ,color:'orange' },
         {type: 'number', value: '4'},
         {type: 'number', value: '5'},
         {type: 'number', value: '6'},

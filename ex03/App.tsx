@@ -13,10 +13,11 @@ import {
 } from "./src/constant/calcul";
 import { useDeviceOrientation } from "@react-native-community/hooks";
 import { DeleteIcon } from "lucide-react-native";
+import { calculate } from "./src/utils/function";
 export default function App() {
   const width = Dimensions.get("window").width;
-  const [equation] = useState("0");
-  const [result] = useState(0);
+  const [equation, setEquation] = useState("0");
+  const [result, setResult] = useState<number | string>(0);
   const landscape = useDeviceOrientation();
 
   return (
@@ -42,7 +43,7 @@ export default function App() {
           {equation}
         </Text>
         <Text className="text-white  text-xl font-bold text-right ">
-          = {result}
+          {result === "hidden" ? "" : "=" + result + ""}
         </Text>
       </View>
       <View className="w-full flex-row flex-wrap gap-4   items-center flex">
@@ -62,7 +63,13 @@ export default function App() {
               key={index}
               className="items-center justify-center rounded-full opacity-90"
               onPress={() => {
-                console.log(item.value);
+                calculate(
+                  item.type,
+                  item.value,
+                  equation,
+                  setEquation,
+                  setResult
+                );
               }}
             >
               <Text
