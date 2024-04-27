@@ -1,15 +1,25 @@
 import { View, TextInput, TouchableOpacity } from "react-native";
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TabsIcon from "../../components/TabsIcon";
 import { Calendar, CalendarDays, MapPin, Search, Settings } from "lucide-react-native";
 import { useStore } from "../../store";
+import * as Location from "expo-location";
 
 const _layout = () => {
   const { search, setSearch } = useStore();
   const [stateSearch, setStateSearch] = React.useState("");
+  const [location,setLocation] = useState("");
+  
+  const getPermission = async()=>{
+    let res =  await Location.getCurrentPositionAsync();
+    console.log({res});
+  }
+  useEffect(()=>{
+    getPermission();
+  },[])
   return (
     <>
       <Tabs
@@ -21,7 +31,7 @@ const _layout = () => {
             backgroundColor: "#A3D8FF",
             borderTopWidth: 1,
             borderTopColor: "#A3D8FF",
-            height: 70,
+            height: 60,
           },
           header: () => (
             <SafeAreaView>
@@ -30,7 +40,7 @@ const _layout = () => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  padding: 10,
+                  padding: 8,
                   backgroundColor: "#A3D8FF",
                 }}
               >
@@ -61,7 +71,7 @@ const _layout = () => {
                   }}
                   style={{
                     backgroundColor: "#FFA001",
-                    padding: 8,
+                    padding: 6,
                     borderRadius: 100,
                   }}
                 >
