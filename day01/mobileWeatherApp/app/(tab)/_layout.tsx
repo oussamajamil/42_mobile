@@ -9,7 +9,7 @@ import { useStore } from "../../store";
 
 const _layout = () => {
   const { search, setSearch } = useStore();
-  const [stateSearchm, setStateSearch] = React.useState("");
+  const [stateSearch, setStateSearch] = React.useState("");
   return (
     <>
       <Tabs
@@ -30,24 +30,30 @@ const _layout = () => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
+                  alignItems: "center",
                   padding: 10,
                   backgroundColor: "#A3D8FF",
                 }}
               >
-                <TextInput
-                  value={stateSearchm}
-                  onChangeText={(text) => setStateSearch(text)}
+                <View
                   style={{
-                    padding: 8,
-                    backgroundColor: "#f2f2f2",
-                    borderRadius: 10,
                     width: "80%",
                   }}
-                  placeholder="Search"
-                />
+                >
+                  <TextInput
+                    value={stateSearch}
+                    onChangeText={(text) => setStateSearch(text)}
+                    style={{
+                      padding: 8,
+                      backgroundColor: "transparent",
+                      borderRadius: 10,
+                    }}
+                    placeholder="Search...."
+                  />
+                </View>
                 <TouchableOpacity
                   onPress={() => {
-                    setSearch(stateSearchm);
+                    setSearch(stateSearch);
                   }}
                   style={{
                     backgroundColor: "#FFA001",
