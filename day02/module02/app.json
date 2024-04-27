@@ -5,6 +5,11 @@
     "scheme": "mobileWeatherApp",
     "version": "1.0.0",
     "orientation": "default",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -16,6 +21,10 @@
       "**/*"
     ],
     "ios": {
+      "infoPlist": {
+        "NSLocationAlwaysUsageDescription": "Your description",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Your description"
+      },
       "supportsTablet": true
     },
     "android": {

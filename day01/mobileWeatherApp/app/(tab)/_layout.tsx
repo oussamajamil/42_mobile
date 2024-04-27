@@ -4,7 +4,13 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TabsIcon from "../../components/TabsIcon";
-import { Calendar, CalendarDays, MapPin, Search, Settings } from "lucide-react-native";
+import {
+  Calendar,
+  CalendarDays,
+  MapPin,
+  Search,
+  Settings,
+} from "lucide-react-native";
 import { useStore } from "../../store";
 
 const _layout = () => {
@@ -37,16 +43,16 @@ const _layout = () => {
                 <View
                   style={{
                     width: "80%",
-                    display:"flex",
-                    flexDirection:"row",
-                    gap:8,
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 8,
                     alignItems: "center",
                   }}
                 >
                   <Search color="white" size={20} />
                   <TextInput
                     value={stateSearch}
-                    onChangeText={(text:string) => setStateSearch(text)}
+                    onChangeText={(text: string) => setStateSearch(text)}
                     style={{
                       padding: 8,
                       backgroundColor: "transparent",
@@ -72,12 +78,15 @@ const _layout = () => {
           ),
         }}
       >
-           <Tabs.Screen
+        <Tabs.Screen
           name="currently"
           options={{
-            tabBarIcon: ({ color, focused }:{
-              color:string,
-              focused:boolean
+            tabBarIcon: ({
+              color,
+              focused,
+            }: {
+              color: string;
+              focused: boolean;
             }) => (
               <TabsIcon
                 name="currently"
@@ -91,9 +100,12 @@ const _layout = () => {
         <Tabs.Screen
           name="today"
           options={{
-            tabBarIcon: ({ color, focused }:{
-              color:string,
-              focused:boolean
+            tabBarIcon: ({
+              color,
+              focused,
+            }: {
+              color: string;
+              focused: boolean;
             }) => (
               <TabsIcon
                 name="today"
@@ -104,13 +116,16 @@ const _layout = () => {
             ),
           }}
         />
-     
+
         <Tabs.Screen
           name="weekly"
           options={{
-            tabBarIcon: ({ color, focused }:{
-              color:string,
-              focused:boolean
+            tabBarIcon: ({
+              color,
+              focused,
+            }: {
+              color: string;
+              focused: boolean;
             }) => (
               <TabsIcon
                 name="weekly"
