@@ -15,19 +15,16 @@ const TabsIcon = ({
   return (
     // className="flex items-center justify-center gap-2"
     <View
+    className="items-center justify-center gap-1"
       style={{
         width: Dimensions.get("screen").width/3,
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 2,
       }}
     >
       {icon}
       <Text
+      className="font-[6]"
         style={{
           color: color,
-          fontSize: 12,
           fontWeight: focused ? "600" : "400",
         }}
       >

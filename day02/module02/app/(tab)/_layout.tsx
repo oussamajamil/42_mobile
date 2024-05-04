@@ -5,6 +5,7 @@ import {
   Text,
   Dimensions,
   ScrollView,
+  Keyboard,
   FlatList,
 } from "react-native";
 import { Tabs } from "expo-router";
@@ -15,6 +16,7 @@ import TabsIcon from "../../components/TabsIcon";
 import {
   Calendar,
   CalendarDays,
+  LoaderCircle,
   MapPin,
   Search,
   Settings,
@@ -22,50 +24,62 @@ import {
 import { useStore } from "../../store";
 import * as Location from "expo-location";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { getLocations } from "../../api";
 
 const _layout = () => {
-  const { setLocation } = useStore();
+  const { setLocation,setError,location,setPosition,setLoadingGlobal,loadingGlobal } = useStore();
   const [stateSearch, setStateSearch] = React.useState("");
   const [visible, setVisible] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
-
-  useEffect(() => {
-    try {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          console.log("Permission to access location was denied");
-          return;
+  const {data:cities, isLoading, isError} = useQuery({
+    queryKey: ["cities", stateSearch],
+    queryFn: async () => {
+    
+        if (stateSearch.length <= 2) {
+          return [];
         }
-        const location = await Location.getCurrentPositionAsync({});
-        setLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      })();
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+        const data = await axios.get(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${stateSearch}`
+        );
+        if (!data.data.results)
+          throw new Error("no results found");
+        return data?.data?.results || [];
+    },
+  })
 
+
+useQuery({
+    queryKey: ["position", location?.latitude, location?.longitude],
+    queryFn: async () => {
+      setLoadingGlobal(true);
+      if (!location) {
+        setLoadingGlobal(false);
+        return null;
+      }
+     const data =  await getLocations(location.latitude, location.longitude);
+     if (!data) {
+      setLoadingGlobal(false);
+       throw new Error("An error occurred");
+     }
+    else {
+      setPosition(data  || null);
+    }
+    setLoadingGlobal(false);
+    return data || null;
+    },
+  })
+
+  //// FOR DELETE ERROR WHEN LOCATION IS SET
   useEffect(() => {
-    if (stateSearch.length === 0) {
-      setCities([]);
-      return;
+    if (location) {
+      setError(null);
     }
-    if (stateSearch.length >= 2) {
-      (async () => {
-        try {
-          const data = await axios.get(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${stateSearch}`
-          );
-          setCities(data?.data?.results || []);
-        } catch (error) {
-          console.error(error);
-        }
-      })();
-    }
-  }, [stateSearch]);
+  }
+  , [location])
+
+
+
+
 
   const height = Dimensions.get("window").height;
   return (
@@ -84,77 +98,72 @@ const _layout = () => {
           header: () => (
             <SafeAreaView>
               <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: 8,
-                  backgroundColor: "#A3D8FF",
-                  position: "relative",
-                }}
+              className="flex-row justify-between items-center py-1 px-2 gap-1 bg-[#A3D8FF] relative"
               >
                 <View
-                  style={{
-                    width: "80%",
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 8,
-                    alignItems: "center",
-                  }}
+                className="flex-1 items-center flex-row"
+
                 >
                   <Search color="white" size={20} />
                   <TextInput
+                    className="p-1 flex-1"
                     id="search"
                     onFocus={() => setVisible(true)}
-                    onBlur={() => setVisible(false)}
+                    // onBlur={() => setVisible(false)}
                     value={stateSearch}
                     onChangeText={(text: string) => setStateSearch(text)}
-                    style={{
-                      padding: 8,
-                      backgroundColor: "transparent",
-                      borderRadius: 10,
-                    }}
                     placeholder="Search...."
                   />
                 </View>
                 <TouchableOpacity
-                  onPress={async () => {}}
-                  style={{
-                    backgroundColor: "#FFA001",
-                    padding: 6,
-                    borderRadius: 100,
+                className="bg-[#FFA001] p-1 rounded-full"
+                  onPress={async () => {
+                    try {
+                      let { status } =
+                        await Location.requestForegroundPermissionsAsync();
+                      if (status !== "granted") {
+                        setLocation(null);
+                        setError("Permission to access location was denied");
+                        return;
+                      }
+                      const location = await Location.getCurrentPositionAsync({});
+                      setLocation({
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                      });
+                    } catch (error) {
+                      setError("Geolocation is not available, please it in your App settings");
+                    }
                   }}
                 >
                   <MapPin color="white" />
                 </TouchableOpacity>
-                <ScrollView
+                <View
+                className="absolute left-0 right-0 top-[40] bg-white "
                   style={{
-                    position: "absolute",
-                    top: 60,
-                    left: 0,
-                    right: 0,
                     height: height - 60,
-                    backgroundColor: "white",
-                    display: visible ? "flex" : "none",
-                  }}
+                    display: visible && stateSearch.length > 2  ? "flex" : "none",
+                  }} 
                 >
                   {cities?.length === 0 ? (
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          marginTop: 20,
-                        }}
-                      >
+                    <View className="flex-1 mt-5 items-center">
+                      <Text>
                         No results
                       </Text>
                     </View>
-                  ) : (
+                  ) :
+                  isLoading || loadingGlobal ? (
+                    <View className="flex-1 mt-5 items-center">
+                      <LoaderCircle />
+                    </View>
+                  ) : isError ? (
+                    <View className="flex-1 mt-5 items-center">
+                      <Text>
+                        An error occurred
+                      </Text>
+                    </View>
+                  ) :
+                   (
                     <FlatList
                       data={cities}
                       renderItem={({
@@ -174,7 +183,8 @@ const _layout = () => {
                               longitude: item?.longitude,
                             });
                             setStateSearch(item?.name);
-                            setCities([]);
+                            Keyboard.dismiss();
+                            setVisible(false);
                           }}
                           style={{
                             padding: 8,
@@ -188,7 +198,7 @@ const _layout = () => {
                       keyExtractor={(item) => item?.id}
                     />
                   )}
-                </ScrollView>
+                </View>
               </View>
             </SafeAreaView>
           ),
