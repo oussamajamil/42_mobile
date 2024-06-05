@@ -1,12 +1,10 @@
 import { create } from "zustand";
 
 type Store = {
-  position:{
-    address:{
+  position: {
     city: string;
     country: string;
     region: string;
-    };
   } | null;
   loadingGlobal: boolean;
   setLoadingGlobal: (loading: boolean) => void;

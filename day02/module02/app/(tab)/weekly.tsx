@@ -1,73 +1,62 @@
-// import { View, Text } from "react-native";
-// import { useStore } from "../../store";
-
-// const Weekly = () => {
-//   const { search } = useStore();
-//   return (
-//     <View
-//       style={{
-//         flex: 1,
-//         justifyContent: "center",
-//         alignItems: "center",
-//       }}
-//     >
-//       <Text
-//         style={{
-//           fontSize: 24,
-//           fontWeight: "bold",
-//         }}
-//       >
-//         Weekly
-//       </Text>
-//       <Text>{search}</Text>
-//     </View>
-//   );
-// };
-
-// export default Weekly;
-
-
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { useStore } from "../../store";
 import LocationComponent from "../../components/location";
 import { useQuery } from "@tanstack/react-query";
-import { getWeatherCurrent } from "../../api";
+import { getWeatherWeek } from "../../api";
 import { getWeatherDescription } from "../../utils/function";
 
 const Weekly = () => {
-  const { location,position,loadingGlobal } = useStore();
-  const {data, isLoading, isError} = useQuery({
-    queryKey: ["weather", location?.latitude, location?.longitude],
-    queryFn: async () => await getWeatherCurrent(location?.latitude, location?.longitude),
-  })
+  const { location, position, loadingGlobal } = useStore();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["weatherWeekly", location?.latitude, location?.longitude],
+    queryFn: async () =>
+      await getWeatherWeek(location?.latitude, location?.longitude),
+  });
 
-  if (loadingGlobal || isLoading) return (
-    <View
-      className="flex-1 p-2 items-center"
-    >
-      <Text>Loading...</Text>
-    </View>
-  );
+  if (loadingGlobal || isLoading)
+    return (
+      <View className="flex-1 p-2 items-center">
+        <Text>Loading...</Text>
+      </View>
+    );
   return (
-    <View
-    className="flex-1 p-2 items-center"
-    >
+    <View className="flex-1 p-2 ">
       {location && position ? (
         <>
-           <LocationComponent/> 
-           {data.current_weather && (
-            <View className="mt-5" >
-              <Text className="text-2xl">
-                {data?.current_weather?.temperature}°C
+          <LocationComponent />
+          <ScrollView className="mt-2">
+            {isError && (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: 14,
+                  paddingHorizontal: 16,
+                }}
+              >
+                {"An error occurred"}
               </Text>
-              <Text  className="text-2xl">
-                {data?.current_weather?.windspeed}km/h
-              </Text>
-              <Text  className="text-2xl">
-                {getWeatherDescription(data?.current_weather?.weathercode)}
-              </Text>
+            )}
+            <View className="w-full h-full   flex flex-col gap-1 ">
+              {data &&
+                new Array(7).fill(0).map((_, index) => (
+                  <View
+                    key={index}
+                    className="flex flex-row justify-between items-center p-2 border border-gray-200 rounded-md"
+                  >
+                    <Text className="flex-1">{data.daily.time[index]}</Text>
+                    <Text className="flex-1">
+                      {data.daily.temperature_2m_max[index]}°C
+                    </Text>
+                    <Text className="flex-1 w-6">
+                      {data.daily.temperature_2m_min[index]}°C
+                    </Text>
+                    <Text className="flex-1 w-6">
+                      {getWeatherDescription(data?.daily?.weathercode[index])}
+                    </Text>
+                  </View>
+                ))}
             </View>
-          )}
+          </ScrollView>
         </>
       ) : (
         <Text

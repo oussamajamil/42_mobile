@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
-  ScrollView,
   Keyboard,
   FlatList,
 } from "react-native";
@@ -13,14 +12,7 @@ import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TabsIcon from "../../components/TabsIcon";
-import {
-  Calendar,
-  CalendarDays,
-  LoaderCircle,
-  MapPin,
-  Search,
-  Settings,
-} from "lucide-react-native";
+import { Calendar, CalendarDays, MapPin, Settings } from "lucide-react-native";
 import { useStore } from "../../store";
 import * as Location from "expo-location";
 import axios from "axios";
@@ -28,58 +20,70 @@ import { useQuery } from "@tanstack/react-query";
 import { getLocations } from "../../api";
 
 const _layout = () => {
-  const { setLocation,setError,location,setPosition,setLoadingGlobal,loadingGlobal } = useStore();
+  const {
+    setLocation,
+    setError,
+    location,
+    setPosition,
+    setLoadingGlobal,
+    loadingGlobal,
+  } = useStore();
   const [stateSearch, setStateSearch] = React.useState("");
   const [visible, setVisible] = React.useState(false);
-  const {data:cities, isLoading, isError} = useQuery({
+  const {
+    data: cities,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["cities", stateSearch],
     queryFn: async () => {
-    
+      try {
         if (stateSearch.length <= 2) {
           return [];
         }
         const data = await axios.get(
           `https://geocoding-api.open-meteo.com/v1/search?name=${stateSearch}`
         );
-        if (!data.data.results)
-          throw new Error("no results found");
+        if (!data.data.results) throw new Error("no results found");
         return data?.data?.results || [];
+      } catch (e) {
+        throw new Error("An error occurred");
+      }
     },
-  })
+  });
 
-
-useQuery({
+  useQuery({
     queryKey: ["position", location?.latitude, location?.longitude],
     queryFn: async () => {
-      setLoadingGlobal(true);
-      if (!location) {
+      try {
+        setLoadingGlobal(true);
+        if (!location) {
+          setLoadingGlobal(false);
+          return null;
+        }
+        const data = await getLocations(location.latitude, location.longitude);
+
+        if (!data) {
+          setLoadingGlobal(false);
+          throw new Error("An error occurred");
+        } else {
+          setPosition(data || null);
+          setLoadingGlobal(false);
+          return data || null;
+        }
+      } catch (e) {
         setLoadingGlobal(false);
-        return null;
+        throw new Error("An error occurred");
       }
-     const data =  await getLocations(location.latitude, location.longitude);
-     if (!data) {
-      setLoadingGlobal(false);
-       throw new Error("An error occurred");
-     }
-    else {
-      setPosition(data  || null);
-    }
-    setLoadingGlobal(false);
-    return data || null;
     },
-  })
+  });
 
   //// FOR DELETE ERROR WHEN LOCATION IS SET
   useEffect(() => {
     if (location) {
       setError(null);
     }
-  }
-  , [location])
-
-
-
-
+  }, [location]);
 
   const height = Dimensions.get("window").height;
   return (
@@ -93,18 +97,14 @@ useQuery({
             backgroundColor: "#A3D8FF",
             borderTopWidth: 1,
             borderTopColor: "#A3D8FF",
-            height: 60,
+            height: 70,
+            paddingVertical: 20,
           },
           header: () => (
             <SafeAreaView>
-              <View
-              className="flex-row justify-between items-center py-1 px-2 gap-1 bg-[#A3D8FF] relative"
-              >
-                <View
-                className="flex-1 items-center flex-row"
-
-                >
-                  <Search color="white" size={20} />
+              <View className="flex-row justify-between items-center py-2 px-2 gap-1 bg-[#A3D8FF] relative">
+                <View className="flex-1 items-center flex-row">
+                  {/* <Search color="white" size={20} /> */}
                   <TextInput
                     className="p-1 flex-1"
                     id="search"
@@ -116,7 +116,7 @@ useQuery({
                   />
                 </View>
                 <TouchableOpacity
-                className="bg-[#FFA001] p-1 rounded-full"
+                  className="bg-[#FFA001] p-1 rounded-full"
                   onPress={async () => {
                     try {
                       let { status } =
@@ -126,44 +126,43 @@ useQuery({
                         setError("Permission to access location was denied");
                         return;
                       }
-                      const location = await Location.getCurrentPositionAsync({});
+                      const location = await Location.getCurrentPositionAsync(
+                        {}
+                      );
                       setLocation({
                         latitude: location.coords.latitude,
                         longitude: location.coords.longitude,
                       });
                     } catch (error) {
-                      setError("Geolocation is not available, please it in your App settings");
+                      setError(
+                        "Geolocation is not available, please it in your App settings"
+                      );
                     }
                   }}
                 >
                   <MapPin color="white" />
                 </TouchableOpacity>
                 <View
-                className="absolute left-0 right-0 top-[40] bg-white "
+                  className="absolute left-0 right-0 top-[40] bg-white "
                   style={{
                     height: height - 60,
-                    display: visible && stateSearch.length > 2  ? "flex" : "none",
-                  }} 
+                    display:
+                      visible && stateSearch.length > 2 ? "flex" : "none",
+                  }}
                 >
                   {cities?.length === 0 ? (
                     <View className="flex-1 mt-5 items-center">
-                      <Text>
-                        No results
-                      </Text>
+                      <Text>No results</Text>
                     </View>
-                  ) :
-                  isLoading || loadingGlobal ? (
+                  ) : isLoading || loadingGlobal ? (
                     <View className="flex-1 mt-5 items-center">
-                      <LoaderCircle />
+                      {/* <LoaderCircle /> */}
                     </View>
                   ) : isError ? (
                     <View className="flex-1 mt-5 items-center">
-                      <Text>
-                        An error occurred
-                      </Text>
+                      <Text>An error occurred</Text>
                     </View>
-                  ) :
-                   (
+                  ) : (
                     <FlatList
                       data={cities}
                       renderItem={({
