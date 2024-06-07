@@ -6,13 +6,20 @@ import {
   Dimensions,
   Keyboard,
   FlatList,
+  Platform,
 } from "react-native";
 import { Tabs } from "expo-router";
 import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TabsIcon from "../../components/TabsIcon";
-import { Calendar, CalendarDays, MapPin, Settings } from "lucide-react-native";
+import {
+  Calendar,
+  CalendarDays,
+  LoaderCircle,
+  MapPin,
+  Settings,
+} from "lucide-react-native";
 import { useStore } from "../../store";
 import * as Location from "expo-location";
 import axios from "axios";
@@ -20,6 +27,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getLocations } from "../../api";
 
 const _layout = () => {
+  const isIos = Platform.OS === "ios";
   const {
     setLocation,
     setError,
@@ -97,19 +105,17 @@ const _layout = () => {
             backgroundColor: "#A3D8FF",
             borderTopWidth: 1,
             borderTopColor: "#A3D8FF",
-            height: 70,
-            paddingVertical: 20,
+            height: 60,
+            paddingVertical: isIos ? 10 : 0,
           },
           header: () => (
             <SafeAreaView>
               <View className="flex-row justify-between items-center py-2 px-2 gap-1 bg-[#A3D8FF] relative">
                 <View className="flex-1 items-center flex-row">
-                  {/* <Search color="white" size={20} /> */}
                   <TextInput
                     className="p-1 flex-1"
                     id="search"
                     onFocus={() => setVisible(true)}
-                    // onBlur={() => setVisible(false)}
                     value={stateSearch}
                     onChangeText={(text: string) => setStateSearch(text)}
                     placeholder="Search...."
@@ -143,9 +149,9 @@ const _layout = () => {
                   <MapPin color="white" />
                 </TouchableOpacity>
                 <View
-                  className="absolute left-0 right-0 top-[40] bg-white "
+                  className="absolute left-0 right-0 top-[50] bg-white "
                   style={{
-                    height: height - 60,
+                    height: height - 50,
                     display:
                       visible && stateSearch.length > 2 ? "flex" : "none",
                   }}
@@ -155,12 +161,12 @@ const _layout = () => {
                       <Text>No results</Text>
                     </View>
                   ) : isLoading || loadingGlobal ? (
-                    <View className="flex-1 mt-5 items-center">
-                      {/* <LoaderCircle /> */}
+                    <View className="flex-1 mt-5 items-center justify-center">
+                      <LoaderCircle />
                     </View>
                   ) : isError ? (
-                    <View className="flex-1 mt-5 items-center">
-                      <Text>An error occurred</Text>
+                    <View className="flex-1 mt-5 items-center text-red-500">
+                      <Text>No results</Text>
                     </View>
                   ) : (
                     <FlatList

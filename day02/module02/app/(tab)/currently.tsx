@@ -4,6 +4,7 @@ import LocationComponent from "../../components/location";
 import { useQuery } from "@tanstack/react-query";
 import { getWeatherCurrent } from "../../api";
 import { getWeatherDescription } from "../../utils/function";
+import { LoaderCircle } from "lucide-react-native";
 
 const Currently = () => {
   const { location, position, loadingGlobal } = useStore();
@@ -15,8 +16,8 @@ const Currently = () => {
 
   if (loadingGlobal)
     return (
-      <View className="flex-1 p-2 items-center">
-        <Text>Loading...</Text>
+      <View className="flex-1 p-2 items-center justify-center">
+        <LoaderCircle className="text-[#FFA001] animate-spin" size={60} />
       </View>
     );
   return (
