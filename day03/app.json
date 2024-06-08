@@ -1,9 +1,15 @@
 {
   "expo": {
-    "name": "ex03",
-    "slug": "ex03",
+    "name": "mobileWeatherApp",
+    "slug": "mobileWeatherApp",
+    "scheme": "mobileWeatherApp",
     "version": "1.0.0",
     "orientation": "default",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -15,34 +21,31 @@
       "**/*"
     ],
     "ios": {
+      "infoPlist": {
+        "NSLocationAlwaysUsageDescription": "Your description",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Your description"
+      },
       "supportsTablet": true
     },
-    "preview2": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease"
-      }
-    },
-    "preview3": {
-      "developmentClient": true
-    },
-    "preview4": {
-      "distribution": "internal"
-    },
-    "production": {},
     "android": {
-      "buildType": "apk",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ojamil.ex03"
+      "package": "com.ojamil.mobileWeatherApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      "expo-router"
+    ],
     "extra": {
+      "router": {
+        "origin": false
+      },
       "eas": {
-        "projectId": "55f48ba6-425a-4d9b-9ada-967bc4d7dc15"
+        "projectId": "71f424fb-2d86-46b0-9c54-f98e008c0862"
       }
     }
   }
