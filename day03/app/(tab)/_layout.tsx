@@ -97,9 +97,9 @@ const _layout = () => {
 
   const height = Dimensions.get("window").height;
   return (
-    <View className="flex-1 bg-red-500">
+    <View className="flex-1 ">
       <ImageBackground
-        source={{ uri: "https://example.com/your-background-image.jpg" }}
+        source={{ uri: "/assets/morning.jpg" }}
         className="flex-1"
         resizeMode="cover"
       >

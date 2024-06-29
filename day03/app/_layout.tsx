@@ -5,9 +5,7 @@ import {
   QueryCache,
 } from "@tanstack/react-query";
 import { useStore } from "../store";
-import { ImageBackground } from "react-native";
 import { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 const LayoutApp = () => {
   const [theme, setTheme] = useState("day");
   useEffect(() => {
