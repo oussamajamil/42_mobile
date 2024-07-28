@@ -1,15 +1,10 @@
 {
   "expo": {
-    "name": "mobileWeatherApp",
-    "slug": "mobileWeatherApp",
-    "scheme": "mobileWeatherApp",
+  
+    "name": "YourProjectName",
+    "slug": "YourProjectName",
     "version": "1.0.0",
     "orientation": "default",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -17,36 +12,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
-      "infoPlist": {
-        "NSLocationAlwaysUsageDescription": "Your description",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Your description"
-      },
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.ojamil.mobileWeatherApp"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "71f424fb-2d86-46b0-9c54-f98e008c0862"
-      }
     }
   }
 }

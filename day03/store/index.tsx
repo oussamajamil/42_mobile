@@ -1,6 +1,8 @@
 import { create } from "zustand";
 
 type Store = {
+  isDark: boolean;
+  setIsDark: (isDark: boolean) => void;
   position: {
     city: string;
     country: string;
@@ -27,6 +29,8 @@ type Store = {
 export const useStore = create<Store>((set, get) => ({
   search: "",
   error: null,
+  isDark: true,
+  setIsDark: (isDark) => set({ isDark }),
   loadingGlobal: false,
   setLoadingGlobal: (loadingGlobal) => set({ loadingGlobal }),
   setError: (error) => set({ error }),
