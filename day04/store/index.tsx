@@ -2,8 +2,8 @@ import { User } from "firebase/auth";
 import { create } from "zustand";
 
 type Store = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: any | null;
+  setUser: (user: any | null) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   isAuthenticated: boolean | undefined;

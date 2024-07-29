@@ -10,20 +10,20 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useStore } from "@/store";
 import * as WebBrowser from "expo-web-browser";
 import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
-import { createTokenWithCode } from "@/utils/createTokenWithCode";
 import { GithubAuthProvider, signInWithCredential } from "firebase/auth";
-import { FirebaseAuth } from "@/utils/firebase";
+import { FirebaseAuth, FireBaseDb } from "@/utils/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { createTokenWithCode } from "@/utils/createTokenWithCode";
 
 WebBrowser.maybeCompleteAuthSession();
 
-// EndPoints
 const discorvy = {
   authorizationEndpoint: "https://github.com/login/oauth/authorize",
   tokenEndpoint: "https://github.com/login/oauth/access_token",
   revocationEndpoint: `https://github.com/settings/connections/applications/${process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID}`,
 };
 const Welcome = () => {
-  const { setUser, setIsAuthenticated } = useStore();
+  const { setLoading } = useStore();
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -36,19 +36,39 @@ const Welcome = () => {
   );
 
   async function signInWithGithub() {
-    if (response?.type === "success") {
-      const { code } = response.params;
-      const data = await createTokenWithCode(code);
-      const { token_type, scope, access_token } = data;
-      if (!access_token) {
-        console.log("No access token");
-        return;
+    try {
+      if (response?.type === "success") {
+        const { code } = response.params;
+        setLoading(true);
+        const data = await createTokenWithCode(code);
+        const { token_type, scope, access_token } = data;
+        console.log({
+          token_type,
+          scope,
+          access_token,
+        });
+        if (!access_token) {
+          console.log("No access token");
+          return;
+        } else {
+          const credential = GithubAuthProvider.credential(access_token);
+          const res = await signInWithCredential(FirebaseAuth, credential);
+          const userDocRef = doc(FireBaseDb, "users", res.user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (!userDoc.exists()) {
+            await setDoc(userDocRef, {
+              email: res.user.email,
+              userId: res.user.uid,
+            });
+          }
+          router.replace("/(app)/home");
+        }
       } else {
-        const credential = GithubAuthProvider.credential(access_token);
-        const res = await signInWithCredential(FirebaseAuth, credential);
-        setUser(res.user);
-        setIsAuthenticated(true);
+        console.log("No response");
       }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   }
 
@@ -107,17 +127,7 @@ const Welcome = () => {
             buttonStyle={{
               width: wp(80),
             }}
-            // isLoading={true}
           />
-          {/* <Button
-            text="Continue with Google"
-            onPress={() => promptAsync()}
-            buttonStyle={{
-              marginTop: hp(2),
-            }}
-            iconLeft={true}
-            icon={<FontAwesome name="google" size={24} color={"white"} />}
-          /> */}
           <Button
             text="Continue with GitHub"
             onPress={() => promptAsync()}
@@ -125,7 +135,7 @@ const Welcome = () => {
               marginTop: hp(2),
             }}
             iconLeft={true}
-            icon={<FontAwesome name="google" size={24} color={"white"} />}
+            icon={<FontAwesome name="github" size={24} color={"white"} />}
           />
           <View className="flex flex-row  items-center justify-center">
             <Text

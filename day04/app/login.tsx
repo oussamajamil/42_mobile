@@ -34,8 +34,8 @@ const Login = () => {
           data.password
         );
       }
-      setLoading(false);
     } catch (error) {
+      setLoading(false);
       alert("An error occurred");
     }
   };

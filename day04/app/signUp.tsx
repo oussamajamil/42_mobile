@@ -15,6 +15,7 @@ import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { FirebaseAuth, FireBaseDb } from "@/utils/firebase";
 import { useStore } from "@/store";
 import { doc, setDoc } from "@firebase/firestore";
+import { getDoc } from "firebase/firestore";
 
 const SignUp = () => {
   const { setUser } = useStore();
@@ -38,15 +39,23 @@ const SignUp = () => {
           data.email,
           data.password
         );
+        const userDocRef = doc(FireBaseDb, "users", response.user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (!userDoc.exists()) {
+          await setDoc(userDocRef, {
+            email: response.user.email,
+            uid: response.user.uid,
+            createdAt: new Date().toISOString(),
+            displayName: response.user.email.split("@")[0],
+            photoUrl: "",
+          });
+        }
         setUser(response.user);
-        await setDoc(doc(FireBaseDb, "users", response.user.uid), {
-          email: response.user.email,
-          userId: response.user.uid,
-        });
+        setLoading(false);
         router.push("home");
       }
-      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };

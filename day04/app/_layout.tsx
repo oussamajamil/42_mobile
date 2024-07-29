@@ -4,22 +4,17 @@ import { router, Slot, Stack, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useStore } from "@/store";
 import { FirebaseAuth } from "@/utils/firebase";
-// import * as Google from "expo-auth-session/providers/google";
-// import * as WebBrowser from "expo-web-browser";
-import {
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithCredential,
-} from "firebase/auth";
-// WebBrowser.maybeCompleteAuthSession();
+import { SWRConfig } from "swr";
+import { onAuthStateChanged } from "firebase/auth";
 
 const LayoutApp = () => {
   const segments = useSegments();
-  const { isAuthenticated, setIsAuthenticated, setUser } = useStore();
+  const { isAuthenticated, setIsAuthenticated, setUser, setLoading } =
+    useStore();
   useEffect(() => {
     const inApp = segments[0] === "(app)";
     if (isAuthenticated && !inApp) {
-      router.replace("home");
+      router.replace("/(app)/home");
     } else if (!isAuthenticated) {
       console.log("Redirect to /signIn");
       router.replace("welcome");
@@ -29,9 +24,15 @@ const LayoutApp = () => {
   }, [isAuthenticated]);
   useEffect(() => {
     const unsub = onAuthStateChanged(FirebaseAuth, (user) => {
+      setLoading(false);
       if (user) {
+        setUser({
+          email: user.email,
+          uid: user.uid,
+          displayName: user.displayName || (user?.email || "").split("@")[0],
+          photoURL: user.photoURL,
+        });
         setIsAuthenticated(true);
-        setUser(user);
       } else {
         setIsAuthenticated(false);
         setUser(null);
@@ -41,9 +42,14 @@ const LayoutApp = () => {
   }, []);
 
   return (
-    <>
+    <SWRConfig
+      value={{
+        shouldRetryOnError: false,
+        revalidateOnFocus: false,
+      }}
+    >
       <Slot />
-    </>
+    </SWRConfig>
   );
 };
 
