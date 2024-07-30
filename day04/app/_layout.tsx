@@ -26,6 +26,7 @@ const LayoutApp = () => {
     const unsub = onAuthStateChanged(FirebaseAuth, (user) => {
       setLoading(false);
       if (user) {
+        console.log("User is signed in", user);
         setUser({
           email: user.email,
           uid: user.uid,
@@ -41,16 +42,7 @@ const LayoutApp = () => {
     return unsub;
   }, []);
 
-  return (
-    <SWRConfig
-      value={{
-        shouldRetryOnError: false,
-        revalidateOnFocus: false,
-      }}
-    >
-      <Slot />
-    </SWRConfig>
-  );
+  return <Slot />;
 };
 
 export default LayoutApp;

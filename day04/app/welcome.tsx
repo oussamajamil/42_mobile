@@ -52,6 +52,7 @@ const Welcome = () => {
           return;
         } else {
           const credential = GithubAuthProvider.credential(access_token);
+          console.log({ credential });
           const res = await signInWithCredential(FirebaseAuth, credential);
           const userDocRef = doc(FireBaseDb, "users", res.user.uid);
           const userDoc = await getDoc(userDocRef);
@@ -86,7 +87,6 @@ const Welcome = () => {
         }}
         className="flex-1 flex items-center justify-around bg-white"
       >
-        {/* image page */}
         <Image
           source={require("@/assets/images/pngwing.com.png")}
           style={{

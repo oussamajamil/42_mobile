@@ -5,23 +5,58 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { hp, wp } from "@/helpers/common";
 import FeelingComp from "@/components/feeling";
 import Button from "@/components/Button";
-import { WriteDateToFirseBae } from "@/utils/firebase";
+import { findOneWithId, UpdateData } from "@/utils/firebase";
 import { useStore } from "@/store";
+import useSWR from "swr";
+import { updateCurrentUser } from "firebase/auth";
+import Loading from "@/components/Loading";
 
-const AddNotes = () => {
+const EditNotes = () => {
   const { user } = useStore();
+  const { id } = useLocalSearchParams();
   const [selected, setSelected] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [type, setType] = React.useState<string | null>(null);
+
+  const { data, isLoading, error } = useSWR(
+    `notesDetail/${id}`,
+    async () => {
+      try {
+        if (!id) {
+          return null;
+        }
+        const dt: any = await findOneWithId("notes", id as string);
+        return dt;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
+    {
+      onSuccess: (data) => {
+        console.log({ data });
+        setTitle(data.title);
+        setContent(data.content);
+        setSelected(data.feeling);
+        setType(data.type);
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (!user) {
+      router.push("welcome");
+    }
+  }, [user]);
 
   const addNote = async () => {
     try {
@@ -29,15 +64,15 @@ const AddNotes = () => {
       if (!title || !content || !selected || !type) {
         alert("Please fill all fields");
       } else {
-        await WriteDateToFirseBae("notes", {
+        await UpdateData("notes", id as string, {
           title,
           content,
           feeling: selected,
-          date: new Date().toISOString(),
+          date: new Date(data.date).toISOString(),
           uid: user.uid,
           type: type,
         });
-        router.push("home");
+        router.replace("list");
       }
     } catch (error) {
       console.log(error);
@@ -46,19 +81,32 @@ const AddNotes = () => {
       setLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <ScreenWrapper>
+        <View className="flex-1  p-6 relative">
+          <Text className="text-2xl font-bold">Edit Note</Text>
+          <View className="flex-1 items-center justify-center">
+            <Loading />
+          </View>
+        </View>
+      </ScreenWrapper>
+    );
+  }
   return (
     <ScreenWrapper>
       <ScrollView>
         <View className="flex relative flex-1 items-center">
           <View className="absolute  left-1">
             <TouchableOpacity
-              onPress={() => router.push("home")}
+              onPress={() => router.replace("list")}
               className="bg-gray-200 p-2 rounded-md"
             >
               <FontAwesome name="arrow-left" size={15} />
             </TouchableOpacity>
           </View>
-          <Text className="text-xl font-bold">AddNotes</Text>
+          <Text className="text-xl font-bold">Edit Note</Text>
           <View
             className="flex-1 w-full flex-col"
             style={{
@@ -77,7 +125,7 @@ const AddNotes = () => {
                 onChangeText={(val) => {
                   setTitle(val);
                 }}
-                value={title}
+                value={title || data?.title}
                 className="border p-2 rounded-md"
               />
             </View>
@@ -89,7 +137,7 @@ const AddNotes = () => {
             >
               <Text className="font-bold">Content</Text>
               <TextInput
-                value={content}
+                value={content || data?.content}
                 multiline
                 onChangeText={(val) => {
                   setContent(val);
@@ -114,7 +162,7 @@ const AddNotes = () => {
                 }}
               >
                 <FeelingComp
-                  selected={selected}
+                  selected={selected || data?.feeling}
                   onValueChange={(val) => {
                     setType(val.type);
                     setSelected(val.name);
@@ -126,7 +174,7 @@ const AddNotes = () => {
               buttonStyle={{
                 margin: wp(2),
               }}
-              text="Add Note"
+              text="Edit Note"
               onPress={async () => {
                 await addNote();
               }}
@@ -139,4 +187,4 @@ const AddNotes = () => {
   );
 };
 
-export default AddNotes;
+export default EditNotes;

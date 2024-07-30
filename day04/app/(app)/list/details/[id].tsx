@@ -27,7 +27,7 @@ const DetailPage = () => {
       }
       //   const dt: NotesType = await findOneWithId("notes", id as string);
       //   return dt;
-      const dt: NotesType = await findOneWithId("notes", id as string);
+      const dt: any = await findOneWithId("notes", id as string);
       return dt;
     } catch (error) {
       console.log(error);
@@ -42,7 +42,7 @@ const DetailPage = () => {
         alert("An error occurred");
       } else {
         const res = await DeleteData("notes", id as string);
-        console.log(res);
+        router.push("list");
       }
     } catch (error) {
       console.log(error);
@@ -99,7 +99,7 @@ const DetailPage = () => {
                 className="ml-2"
               />
               <Text className="text-sm text-gray-500 text-end ">
-                {res?.date.replace("T", " ")}
+                {res?.date}
               </Text>
             </View>
           </View>
@@ -137,7 +137,7 @@ const DetailPage = () => {
               icon={<FontAwesome name="edit" size={22} color={"white"} />}
               text="edit"
               onPress={() => {
-                router.push(`edit/${id}`);
+                router.push(`list/details/edit/${id}`);
               }}
             />
           </View>

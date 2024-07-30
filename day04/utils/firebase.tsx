@@ -73,7 +73,7 @@ export const getWithUserIdOrType = async (
     let q: any;
 
     q = query(dataRef, where("uid", "==", userId));
-    if (type) {
+    if (type && type !== "all") {
       q = query(q, where("type", "==", type));
     }
     q = query(q, limit(take));
