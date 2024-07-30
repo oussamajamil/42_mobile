@@ -36,6 +36,7 @@ const AddNotes = () => {
           date: new Date().toISOString(),
           uid: user.uid,
           type: type,
+          userEmail: user.email,
         });
         router.push("home");
       }

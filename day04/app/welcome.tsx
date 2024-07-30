@@ -53,12 +53,17 @@ const Welcome = () => {
         } else {
           const credential = GithubAuthProvider.credential(access_token);
           console.log({ credential });
-          const res = await signInWithCredential(FirebaseAuth, credential);
+          const res: any = await signInWithCredential(FirebaseAuth, credential);
+          console.log({
+            res: JSON.stringify({ res: res?.["_tokenResponse"] }),
+          });
           const userDocRef = doc(FireBaseDb, "users", res.user.uid);
           const userDoc = await getDoc(userDocRef);
           if (!userDoc.exists()) {
             await setDoc(userDocRef, {
-              email: res.user.email,
+              email:
+                res.user.email ||
+                res?.["_tokenResponse"]?.fullName + "@gmail.com",
               userId: res.user.uid,
             });
           }

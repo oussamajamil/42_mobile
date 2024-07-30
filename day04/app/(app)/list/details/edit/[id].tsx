@@ -71,6 +71,7 @@ const EditNotes = () => {
           date: new Date(data.date).toISOString(),
           uid: user.uid,
           type: type,
+          userEmail: user.email,
         });
         router.replace("list");
       }
