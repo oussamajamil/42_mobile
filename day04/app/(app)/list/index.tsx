@@ -50,29 +50,6 @@ const List = () => {
       </ScreenWrapper>
     );
   }
-  // if (res?.length == 0 || !res) {
-  //   return (
-  //     <ScreenWrapper>
-  //       <View className="flex-1  p-6 relative">
-  //         <Text className="text-2xl font-bold">List</Text>
-  //         <View className="flex-1 items-center justify-center">
-  //           <Text className="text-red-500 text-bold text-2xl">
-  //             No data found
-  //           </Text>
-  //         </View>
-  //         <TouchableOpacity
-  //           className="h-16 w-16 flex items-center justify-center rounded-full absolute bottom-4 right-4"
-  //           style={{
-  //             backgroundColor: Colors.primary,
-  //           }}
-  //           onPress={() => router.push("home/addNotes")}
-  //         >
-  //           <FontAwesome name="plus" size={20} color={"white"} />
-  //         </TouchableOpacity>
-  //       </View>
-  //     </ScreenWrapper>
-  //   );
-  // }
   return (
     <ScreenWrapper>
       <View className="flex-1  p-6 relative">
@@ -117,12 +94,11 @@ const List = () => {
                 <Text className="text-sm">{item.content}</Text>
                 <View className="flex flex-row items-center justify-end gap-2">
                   <FontAwesome name="history" size={14} color={"red"} />
-                  <Text className="text-sm">{item.date}</Text>
+                  {/* <Text className="text-sm">{item.date}</Text> */}
                 </View>
                 {/* / show mor icon/ */}
                 <TouchableOpacity
                   className="absolute top-2 right-2"
-                  // list/details/[id]
                   onPress={() => router.push(`list/details/${item.id}`)}
                 >
                   <FontAwesome name="edit" size={20} color={"black"} />

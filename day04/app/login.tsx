@@ -10,7 +10,7 @@ import ScreenWrapper from "@/components/ScreenWrapper";
 import { wp } from "@/helpers/common";
 import Button from "@/components/Button";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-
+import Toast from 'react-native-toast-message';
 import { router } from "expo-router";
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import { FirebaseAuth } from "@/utils/firebase";
@@ -26,17 +26,29 @@ const Login = () => {
     try {
       setLoading(true);
       if (!data.email || !data.password) {
-        alert("Please fill all fields");
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Please fill in all fields",
+        });
+        setLoading(false);
       } else {
-        await signInWithEmailAndPassword(
+       const res =  await signInWithEmailAndPassword(
           FirebaseAuth,
           data.email,
           data.password
         );
+        if (res) {
+          router.push("home");
+        }
       }
-    } catch (error) {
+    } catch (error:any) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.message || "email or password is incorrect",
+      });
       setLoading(false);
-      alert("An error occurred");
     }
   };
 

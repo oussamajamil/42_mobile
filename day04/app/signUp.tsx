@@ -15,8 +15,8 @@ import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { FirebaseAuth, FireBaseDb } from "@/utils/firebase";
 import { useStore } from "@/store";
 import { doc, setDoc } from "@firebase/firestore";
-import { getDoc } from "firebase/firestore";
-
+import { Timestamp, getDoc } from "firebase/firestore";
+import Toast from "react-native-toast-message";
 const SignUp = () => {
   const { setUser } = useStore();
   const [loading, setLoading] = React.useState(false);
@@ -43,20 +43,27 @@ const SignUp = () => {
         const userDoc = await getDoc(userDocRef);
         if (!userDoc.exists()) {
           await setDoc(userDocRef, {
-            email: response.user.email,
+            email: response.user?.email,
             uid: response.user.uid,
-            createdAt: new Date().toISOString(),
+            createdAt: Timestamp.now(),
             displayName: response.user.email.split("@")[0],
             photoUrl: "",
           });
         }
         setUser(response.user);
-        setLoading(false);
+       
         router.push("home");
       }
-    } catch (error) {
+    } catch (error:any) {
+    
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.message || "An error occurred",
+      });
+    }
+    finally {
       setLoading(false);
-      console.log(error);
     }
   };
 

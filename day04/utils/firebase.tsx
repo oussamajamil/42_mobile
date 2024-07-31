@@ -95,7 +95,7 @@ export const findOneWithId = async (cl: string, id: string) => {
     if (noteDoc.exists()) {
       return { id: noteDoc.id, ...noteDoc.data() };
     } else {
-      throw new Error("No such document!");
+      return null;
     }
   } catch (e) {
     console.error("Error finding note:", e);

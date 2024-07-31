@@ -14,6 +14,7 @@ import FeelingComp from "@/components/feeling";
 import Button from "@/components/Button";
 import { WriteDateToFirseBae } from "@/utils/firebase";
 import { useStore } from "@/store";
+import { Timestamp } from "firebase/firestore";
 
 const AddNotes = () => {
   const { user } = useStore();
@@ -33,7 +34,7 @@ const AddNotes = () => {
           title,
           content,
           feeling: selected,
-          date: new Date().toISOString(),
+          date: Timestamp.now(),
           uid: user.uid,
           type: type,
           userEmail: user.email,

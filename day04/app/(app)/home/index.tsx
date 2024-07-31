@@ -41,7 +41,10 @@ const HomeScreen = () => {
     isValidating,
   } = useSWR("notesHome", async () => {
     const dt: NotesType[] = await getWithUserIdOrType("notes", user.uid);
-    return dt || [];
+    return dt.sort(
+      (a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    ) || [];
   });
 
   return (
@@ -65,10 +68,10 @@ const HomeScreen = () => {
             <FontAwesome name="sign-out" size={wp(6)} color={"white"} />
           </TouchableOpacity>
         </View>
-        {user.photoURL ? (
+        {user?.photoURL ? (
           <Image
             className="rounded-full"
-            source={{ uri: user.photoURL }}
+            source={{ uri: user?.photoURL }}
             style={{
               width: wp(30),
               height: wp(30),
@@ -91,7 +94,7 @@ const HomeScreen = () => {
             fontSize: wp(6),
           }}
         >
-          {user.displayName || "user Name"}
+          {user?.displayName || "user Name"}
         </Text>
       </View>
       <View className="flex-1 relative">
@@ -133,10 +136,6 @@ const HomeScreen = () => {
                 }}
               >
                 {(res?.slice(res?.length - 2, res?.length) || [])
-                  .sort(
-                    (a, b) =>
-                      new Date(a.date).getTime() - new Date(b.date).getTime()
-                  )
                   ?.map((note, index: number) => (
                     <View
                       key={index}
@@ -159,7 +158,7 @@ const HomeScreen = () => {
                       </Text>
                       <View className="mt-2  justify-end gap-2 flex flex-row items-center ">
                         <FontAwesome name="history" size={15} color={"red"} />
-                        <Text>{note.date.replace("T", " ")}</Text>
+                        {/* <Text>{note.date}</Text> */}
                       </View>
                     </View>
                   ))}

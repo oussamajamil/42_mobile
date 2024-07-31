@@ -99,7 +99,7 @@ const DetailPage = () => {
                 className="ml-2"
               />
               <Text className="text-sm text-gray-500 text-end ">
-                {res?.date}
+                {/* {res?.date} */}
               </Text>
             </View>
           </View>
