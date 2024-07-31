@@ -15,7 +15,7 @@ import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { FirebaseAuth, FireBaseDb } from "@/utils/firebase";
 import { useStore } from "@/store";
 import { doc, setDoc } from "@firebase/firestore";
-import { getDoc } from "firebase/firestore";
+import { getDoc, Timestamp } from "firebase/firestore";
 
 const SignUp = () => {
   const { setUser } = useStore();
@@ -43,10 +43,10 @@ const SignUp = () => {
         const userDoc = await getDoc(userDocRef);
         if (!userDoc.exists()) {
           await setDoc(userDocRef, {
-            email: response.user.email,
-            uid: response.user.uid,
-            createdAt: new Date().toISOString(),
-            displayName: response.user.email.split("@")[0],
+            email: response?.user?.email,
+            uid: response?.user?.uid,
+            createdAt: Timestamp.now(),
+            displayName: response?.user?.email?.split("@")?.[0],
             photoUrl: "",
           });
         }

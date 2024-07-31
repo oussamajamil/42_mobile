@@ -21,6 +21,7 @@
     "@react-native-google-signin/google-signin": "^12.2.1",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.11.0",
+    "date-fns": "^3.6.0",
     "expo": "~51.0.22",
     "expo-auth-session": "~5.5.2",
     "expo-constants": "~16.0.2",

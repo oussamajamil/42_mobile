@@ -14,6 +14,7 @@ import {
   orderBy,
   query,
   setDoc,
+  Timestamp,
   where,
 } from "firebase/firestore";
 
@@ -63,26 +64,28 @@ export const UpdateData = async (cl: any, id: string, data: any) => {
 };
 
 export const getWithUserIdOrType = async (
-  cl: any,
+  cl: string,
   userId: string,
   type?: string,
   take: number = 1000
 ) => {
   try {
     const dataRef = collection(FireBaseDb, cl);
-    let q: any;
+    let q = query(dataRef, where("uid", "==", userId));
 
-    q = query(dataRef, where("uid", "==", userId));
     if (type && type !== "all") {
       q = query(q, where("type", "==", type));
     }
     q = query(q, limit(take));
+
     const snap = await getDocs(q);
-    const res = snap.docs.map((doc: any) => {
-      return { ...doc.data(), id: doc.id };
-    });
+    const res = snap.docs.map((doc: any) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
     return res;
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 };

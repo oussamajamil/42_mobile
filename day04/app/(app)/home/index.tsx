@@ -17,6 +17,7 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { feelingData } from "@/components/feeling";
 import Loading from "@/components/Loading";
+import { format } from "date-fns";
 
 export interface NotesType {
   title: string;
@@ -24,7 +25,7 @@ export interface NotesType {
   feeling: string;
   content: string;
   uid: string;
-  date: string;
+  date: Date;
 }
 const HomeScreen = () => {
   const { user } = useStore();
@@ -41,7 +42,12 @@ const HomeScreen = () => {
     isValidating,
   } = useSWR("notesHome", async () => {
     const dt: NotesType[] = await getWithUserIdOrType("notes", user.uid);
-    return dt || [];
+
+    return (
+      dt
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 2) || []
+    );
   });
 
   return (
@@ -65,7 +71,7 @@ const HomeScreen = () => {
             <FontAwesome name="sign-out" size={wp(6)} color={"white"} />
           </TouchableOpacity>
         </View>
-        {user.photoURL ? (
+        {user?.photoURL ? (
           <Image
             className="rounded-full"
             source={{ uri: user.photoURL }}
@@ -91,7 +97,7 @@ const HomeScreen = () => {
             fontSize: wp(6),
           }}
         >
-          {user.displayName || "user Name"}
+          {user?.displayName || "user Name"}
         </Text>
       </View>
       <View className="flex-1 relative">
@@ -111,17 +117,13 @@ const HomeScreen = () => {
               style={{
                 gap: hp(1),
                 backgroundColor: feelingData.find(
-                  (f) => f.name === res?.[res.length - 1]?.feeling
+                  (f) => f.name === res?.[0]?.feeling
                 )?.color,
               }}
             >
               <Text className="text-xl">Your last feeling </Text>
               <Text className="text-4xl">
-                {
-                  feelingData.find(
-                    (f) => f.name === res?.[res.length - 1]?.feeling
-                  )?.icon
-                }
+                {feelingData.find((f) => f.name === res?.[0]?.feeling)?.icon}
               </Text>
             </View>
             <View className="flex-1 relative">
@@ -132,37 +134,32 @@ const HomeScreen = () => {
                   gap: hp(2),
                 }}
               >
-                {(res?.slice(res?.length - 2, res?.length) || [])
-                  .sort(
-                    (a, b) =>
-                      new Date(a.date).getTime() - new Date(b.date).getTime()
-                  )
-                  ?.map((note, index: number) => (
-                    <View
-                      key={index}
-                      className="flex bg-white  rounded-md p-4 shadow-black/20 shadow-md drop-shadow-xl relative "
-                      style={{
-                        gap: 2,
-                      }}
-                    >
-                      <Text className="font-bold text-lg">
-                        {note.title}
-                        <Text>
-                          {
-                            feelingData.find((f) => f?.name === note.feeling)
-                              ?.icon
-                          }
-                        </Text>
+                {res?.map((note, index: number) => (
+                  <View
+                    key={index}
+                    className="flex bg-white  rounded-md p-4 shadow-black/20 shadow-md drop-shadow-xl relative "
+                    style={{
+                      gap: 2,
+                    }}
+                  >
+                    <Text className="font-bold text-lg">
+                      {note.title}
+                      <Text>
+                        {
+                          feelingData.find((f) => f?.name === note.feeling)
+                            ?.icon
+                        }
                       </Text>
-                      <Text className="text-sm w-full truncate">
-                        {note.content}
-                      </Text>
-                      <View className="mt-2  justify-end gap-2 flex flex-row items-center ">
-                        <FontAwesome name="history" size={15} color={"red"} />
-                        <Text>{note.date.replace("T", " ")}</Text>
-                      </View>
+                    </Text>
+                    <Text className="text-sm w-full truncate">
+                      {note.content}
+                    </Text>
+                    <View className="mt-2  justify-end gap-2 flex flex-row items-center ">
+                      <FontAwesome name="history" size={15} color={"red"} />
+                      <Text>{new Date(note?.date) + ""}</Text>
                     </View>
-                  ))}
+                  </View>
+                ))}
               </ScrollView>
             </View>
             <TouchableOpacity

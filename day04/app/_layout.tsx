@@ -26,14 +26,14 @@ const LayoutApp = () => {
     const unsub = onAuthStateChanged(FirebaseAuth, async (user) => {
       setLoading(false);
       if (user) {
-        /// i need the email
         const resUser: any = await findOneWithId("users", user.uid);
         setUser({
           email: user?.email || resUser?.email,
           uid: user?.uid,
           displayName:
-            user?.displayName || (user?.email || resUser?.email).split("@")[0],
-          photoURL: user.photoURL,
+            user?.displayName ||
+            (user?.email || resUser?.email)?.split("@")?.[0],
+          photoURL: user?.photoURL,
         });
         setIsAuthenticated(true);
       } else {

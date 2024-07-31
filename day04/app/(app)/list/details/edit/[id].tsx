@@ -68,7 +68,7 @@ const EditNotes = () => {
           title,
           content,
           feeling: selected,
-          date: new Date(data.date).toISOString(),
+          date: data.date,
           uid: user.uid,
           type: type,
           userEmail: user.email,

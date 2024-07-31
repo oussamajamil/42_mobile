@@ -11,6 +11,7 @@ import { NotesType } from "../../home";
 import { FontAwesome } from "@expo/vector-icons";
 import { hp, wp } from "@/helpers/common";
 import Button from "@/components/Button";
+import { format } from "date-fns";
 
 const DetailPage = () => {
   const { id } = useLocalSearchParams();
@@ -99,7 +100,10 @@ const DetailPage = () => {
                 className="ml-2"
               />
               <Text className="text-sm text-gray-500 text-end ">
-                {res?.date}
+                {/* {format(
+                  new Date(res?.date).toISOString(),
+                  "dd MMM yyyy hh:mm a" */}
+                {/* )} */}
               </Text>
             </View>
           </View>
