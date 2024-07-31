@@ -74,7 +74,7 @@ const HomeScreen = () => {
         {user?.photoURL ? (
           <Image
             className="rounded-full"
-            source={{ uri: user.photoURL }}
+            source={{ uri: user?.photoURL }}
             style={{
               width: wp(30),
               height: wp(30),

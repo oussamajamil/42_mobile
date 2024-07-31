@@ -99,7 +99,6 @@ const List = () => {
                 {/* / show mor icon/ */}
                 <TouchableOpacity
                   className="absolute top-2 right-2"
-                  // list/details/[id]
                   onPress={() => router.push(`list/details/${item.id}`)}
                 >
                   <FontAwesome name="edit" size={20} color={"black"} />

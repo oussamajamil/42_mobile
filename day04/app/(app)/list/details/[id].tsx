@@ -100,10 +100,14 @@ const DetailPage = () => {
                 className="ml-2"
               />
               <Text className="text-sm text-gray-500 text-end ">
+<<<<<<< HEAD
                 {/* {format(
                   new Date(res?.date).toISOString(),
                   "dd MMM yyyy hh:mm a" */}
                 {/* )} */}
+=======
+                {/* {res?.date} */}
+>>>>>>> FETCH_HEAD
               </Text>
             </View>
           </View>
