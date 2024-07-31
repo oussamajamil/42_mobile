@@ -31,14 +31,8 @@ const LayoutApp = () => {
           email: user?.email || resUser?.email,
           uid: user?.uid,
           displayName:
-<<<<<<< HEAD
-            user?.displayName ||
-            (user?.email || resUser?.email)?.split("@")?.[0],
-          photoURL: user?.photoURL,
-=======
             user?.displayName || (user?.email || resUser?.email).split("@")[0],
           photoURL: user?.photoURL || "",
->>>>>>> FETCH_HEAD
         });
         setIsAuthenticated(true);
       } else {
