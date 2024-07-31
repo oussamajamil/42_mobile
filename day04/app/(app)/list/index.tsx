@@ -10,6 +10,8 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import { router } from "expo-router";
 import Loading from "@/components/Loading";
 import { feelingData } from "@/components/feeling";
+import { format } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 
 const List = () => {
   const { user } = useStore();
@@ -94,7 +96,9 @@ const List = () => {
                 <Text className="text-sm">{item.content}</Text>
                 <View className="flex flex-row items-center justify-end gap-2">
                   <FontAwesome name="history" size={14} color={"red"} />
-                  {/* <Text className="text-sm">{item.date}</Text> */}
+                  <Text className="text-sm">
+                    {format(new Date(item?.date), "dd MMM yyyy hh:mm a")}
+                  </Text>
                 </View>
                 {/* / show mor icon/ */}
                 <TouchableOpacity

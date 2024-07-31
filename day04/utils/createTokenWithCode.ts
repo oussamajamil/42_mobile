@@ -14,4 +14,9 @@ export async function createTokenWithCode(code: string) {
     return await response.json();
 }
 
+export const convertFirestoreTimestampToDate = (timestamp: { seconds: number, nanoseconds: number }) => {
+    const milliseconds = timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000;
+    return new Date(milliseconds);
+  };
+
 

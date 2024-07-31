@@ -14,9 +14,9 @@ import {
   orderBy,
   query,
   setDoc,
-  Timestamp,
   where,
 } from "firebase/firestore";
+import { convertFirestoreTimestampToDate } from "./createTokenWithCode";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyADrzJ9D6nz_UiznxWV7w2QNSCgQDtBiV4",
@@ -71,21 +71,36 @@ export const getWithUserIdOrType = async (
 ) => {
   try {
     const dataRef = collection(FireBaseDb, cl);
-    let q = query(dataRef, where("uid", "==", userId));
+
+    let constraints: any = [where("uid", "==", userId)];
 
     if (type && type !== "all") {
-      q = query(q, where("type", "==", type));
+      constraints.push(where("type", "==", type));
     }
-    q = query(q, limit(take));
+
+    constraints.push(limit(take));
+
+    const q = query(dataRef, ...constraints);
 
     const snap = await getDocs(q);
-    const res = snap.docs.map((doc: any) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+
+    if (snap.empty) {
+      console.log("No matching documents.");
+      return [];
+    }
+
+    const res = snap.docs.map((doc: any) => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        date: data.date ? convertFirestoreTimestampToDate(data.date) : null,
+      };
+    });
 
     return res;
   } catch (error: any) {
+    console.error("Error fetching documents: ", error);
     throw error;
   }
 };

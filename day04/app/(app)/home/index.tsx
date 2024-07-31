@@ -18,6 +18,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { feelingData } from "@/components/feeling";
 import Loading from "@/components/Loading";
 import { format } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 
 export interface NotesType {
   title: string;
@@ -41,13 +42,14 @@ const HomeScreen = () => {
     isLoading,
     isValidating,
   } = useSWR("notesHome", async () => {
-    const dt: NotesType[] = await getWithUserIdOrType("notes", user.uid);
-
-    return (
-      dt
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 2) || []
+    const dt: NotesType[] = await getWithUserIdOrType(
+      "notes",
+      user.uid,
+      undefined,
+      2
     );
+
+    return dt || [];
   });
 
   return (
@@ -156,7 +158,9 @@ const HomeScreen = () => {
                     </Text>
                     <View className="mt-2  justify-end gap-2 flex flex-row items-center ">
                       <FontAwesome name="history" size={15} color={"red"} />
-                      <Text>{new Date(note?.date) + ""}</Text>
+                      <Text>
+                        {format(new Date(note?.date), "dd MMM yyyy hh:mm a")}
+                      </Text>
                     </View>
                   </View>
                 ))}

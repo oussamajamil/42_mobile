@@ -31,7 +31,7 @@ const LayoutApp = () => {
           email: user?.email || resUser?.email,
           uid: user?.uid,
           displayName:
-            user?.displayName || (user?.email || resUser?.email).split("@")[0],
+            user?.displayName || (user?.email || resUser?.email)?.split("@")[0],
           photoURL: user?.photoURL || "",
         });
         setIsAuthenticated(true);

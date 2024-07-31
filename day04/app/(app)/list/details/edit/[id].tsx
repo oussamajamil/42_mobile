@@ -17,6 +17,7 @@ import { useStore } from "@/store";
 import useSWR from "swr";
 import { updateCurrentUser } from "firebase/auth";
 import Loading from "@/components/Loading";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 
 const EditNotes = () => {
   const { user } = useStore();
@@ -58,7 +59,7 @@ const EditNotes = () => {
     }
   }, [user]);
 
-  const addNote = async () => {
+  const updateNote = async () => {
     try {
       setLoading(true);
       if (!title || !content || !selected || !type) {
@@ -68,7 +69,7 @@ const EditNotes = () => {
           title,
           content,
           feeling: selected,
-          date: data.date,
+          date: serverTimestamp(),
           uid: user.uid,
           type: type,
           userEmail: user.email,
@@ -177,7 +178,7 @@ const EditNotes = () => {
               }}
               text="Edit Note"
               onPress={async () => {
-                await addNote();
+                await updateNote();
               }}
               isLoading={loading}
             />
