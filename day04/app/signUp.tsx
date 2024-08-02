@@ -134,7 +134,7 @@ const SignUp = () => {
           </View>
         </View>
         <View>
-          <Button text="Sign in" onPress={signUp} isLoading={loading} />
+          <Button text="Sign Up" onPress={signUp} isLoading={loading} />
         </View>
         <KeyboardAvoidingView
           behavior="padding"

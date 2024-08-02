@@ -13,9 +13,15 @@ import { feelingData } from "@/components/feeling";
 import { format } from "date-fns";
 import { Timestamp } from "firebase/firestore";
 
+const categories = [
+  { name: "All", value: undefined },
+  { name: "Positive", value: "positive" },
+  { name: "Negative", value: "negative" },
+  { name: "Neutral", value: "neutral" },
+];
 const List = () => {
   const { user } = useStore();
-  const [type, setType] = React.useState<string>("all");
+  const [type, setType] = React.useState<string | undefined>(undefined);
   const {
     data: res,
     error,
@@ -58,17 +64,18 @@ const List = () => {
         <Text className="text-2xl font-bold">List</Text>
         <View>
           <ScrollView className="flex flex-row gap-4 mt-1" horizontal>
-            {["all", "positive", "negative", "neutral"].map((item, index) => {
+            {categories.map((item, index) => {
               return (
                 <TouchableOpacity
                   key={index}
                   className="border p-2 rounded-md"
                   style={{
-                    backgroundColor: type === item ? Colors.primary : "white",
+                    backgroundColor:
+                      type === item.value ? Colors.primary : "white",
                   }}
-                  onPress={() => setType(item)}
+                  onPress={() => setType(item.value)}
                 >
-                  <Text>{item}</Text>
+                  <Text>{item.name}</Text>
                 </TouchableOpacity>
               );
             })}

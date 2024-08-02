@@ -24,6 +24,7 @@
     "@react-navigation/native-stack": "^6.11.0",
     "date-fns": "^3.6.0",
     "expo": "~51.0.22",
+    "expo-application": "~5.9.1",
     "expo-auth-session": "~5.5.2",
     "expo-constants": "~16.0.2",
     "expo-crypto": "~13.0.2",
@@ -47,7 +48,9 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-web": "~0.19.10",
     "swr": "^2.2.5",
-    "zustand": "^4.5.4"
+    "uri-scheme": "^1.2.2",
+    "zustand": "^4.5.4",
+    "expo-dev-client": "~4.0.21"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

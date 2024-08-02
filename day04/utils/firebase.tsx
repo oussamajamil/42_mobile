@@ -72,15 +72,23 @@ export const getWithUserIdOrType = async (
   try {
     const dataRef = collection(FireBaseDb, cl);
 
-    let constraints: any = [where("uid", "==", userId)];
-
-    if (type && type !== "all") {
-      constraints.push(where("type", "==", type));
+    let q;
+    if (type) {
+      q = query(
+        dataRef,
+        where("uid", "==", userId),
+        where("type", "==", type),
+        orderBy("date", "desc"),
+        limit(take)
+      );
+    } else {
+      q = query(
+        dataRef,
+        where("uid", "==", userId),
+        orderBy("date", "desc"),
+        limit(take)
+      );
     }
-
-    constraints.push(limit(take));
-
-    const q = query(dataRef, ...constraints);
 
     const snap = await getDocs(q);
 

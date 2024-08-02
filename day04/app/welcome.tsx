@@ -24,7 +24,6 @@ const discorvy = {
 };
 const Welcome = () => {
   const { setLoading } = useStore();
-
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID!,
@@ -90,18 +89,18 @@ const Welcome = () => {
           marginHorizontal: wp(10),
           flex: 1,
         }}
-        className="flex-1 flex items-center justify-around bg-white"
+        className="flex-1 flex items-center bg-white"
       >
         <Image
           source={require("@/assets/images/pngwing.com.png")}
           style={{
             width: wp(100),
             height: hp(50),
-            resizeMode: "contain",
+            resizeMode: "cover",
             alignSelf: "center",
           }}
         />
-        <View className="flex gap-3">
+        <View className="flex gap-3  mb-4">
           <Text
             style={{
               color: theme.colors.text,
@@ -142,11 +141,11 @@ const Welcome = () => {
             iconLeft={true}
             icon={<FontAwesome name="github" size={24} color={"white"} />}
           />
-          <View className="flex flex-row  items-center justify-center">
+          <View className="flex flex-row  items-center justify-center mt-4">
             <Text
               style={{
                 color: theme.colors.text,
-                fontSize: hp(1.5),
+                fontSize: hp(2),
                 textAlign: "center",
               }}
             >

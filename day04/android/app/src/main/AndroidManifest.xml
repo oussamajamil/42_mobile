@@ -26,6 +26,8 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
         <data android:scheme="com.ojamil.day__04"/>
+        <data android:scheme="oussamajamil"/>
+        <data android:scheme="com.ojamil.day04"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

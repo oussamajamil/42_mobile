@@ -27,6 +27,7 @@ const AddNotes = () => {
   const addNote = async () => {
     try {
       setLoading(true);
+      console.log({ title, content, selected, type });
       if (!title || !content || !selected || !type) {
         alert("Please fill all fields");
       } else {
@@ -129,9 +130,7 @@ const AddNotes = () => {
                 margin: wp(2),
               }}
               text="Add Note"
-              onPress={async () => {
-                await addNote();
-              }}
+              onPress={async () => addNote()}
               isLoading={loading}
             />
           </View>

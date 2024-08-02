@@ -13,6 +13,7 @@ import { hp, wp } from "@/helpers/common";
 import Button from "@/components/Button";
 import { format } from "date-fns";
 import { Timestamp } from "firebase/firestore";
+import { convertFirestoreTimestampToDate } from "@/utils/createTokenWithCode";
 
 const DetailPage = () => {
   const { id } = useLocalSearchParams();
@@ -27,8 +28,7 @@ const DetailPage = () => {
       if (!id) {
         return null;
       }
-      //   const dt: NotesType = await findOneWithId("notes", id as string);
-      //   return dt;
+
       const dt: any = await findOneWithId("notes", id as string);
       return dt;
     } catch (error) {
@@ -101,7 +101,10 @@ const DetailPage = () => {
                 className="ml-2"
               />
               <Text className="text-sm text-gray-500 text-end ">
-                {format(new Date(res?.date), "dd MMM yyyy hh:mm a")}
+                {format(
+                  convertFirestoreTimestampToDate(res?.date),
+                  "dd MMM yyyy hh:mm a"
+                )}
               </Text>
             </View>
           </View>
