@@ -41,11 +41,6 @@ const Welcome = () => {
         setLoading(true);
         const data = await createTokenWithCode(code);
         const { token_type, scope, access_token } = data;
-        console.log({
-          token_type,
-          scope,
-          access_token,
-        });
         if (!access_token) {
           console.log("No access token");
           return;

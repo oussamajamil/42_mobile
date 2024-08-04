@@ -44,7 +44,6 @@ const EditNotes = () => {
     },
     {
       onSuccess: (data) => {
-        console.log({ data });
         setTitle(data.title);
         setContent(data.content);
         setSelected(data.feeling);

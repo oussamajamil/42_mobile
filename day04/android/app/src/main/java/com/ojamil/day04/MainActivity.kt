@@ -1,4 +1,4 @@
-package com.ojamil.day__04
+package com.ojamil.day04
 
 import android.os.Build
 import android.os.Bundle

@@ -28,6 +28,8 @@
         <data android:scheme="com.ojamil.day__04"/>
         <data android:scheme="oussamajamil"/>
         <data android:scheme="com.ojamil.day04"/>
+        <data android:scheme="com.ojamil.day04"/>
+        <data android:scheme="exp+day04"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

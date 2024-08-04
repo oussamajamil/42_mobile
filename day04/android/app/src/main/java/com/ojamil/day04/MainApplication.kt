@@ -1,4 +1,4 @@
-package com.ojamil.day__04
+package com.ojamil.day04
 
 import android.app.Application
 import android.content.res.Configuration

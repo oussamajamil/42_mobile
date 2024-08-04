@@ -26,9 +26,7 @@ const AddNotes = () => {
 
   const addNote = async () => {
     try {
-      setLoading(true);
-      console.log({ title, content, selected, type });
-      if (!title || !content || !selected || !type) {
+      setLoading(true);      if (!title || !content || !selected || !type) {
         alert("Please fill all fields");
       } else {
         await WriteDateToFirseBae("notes", {
