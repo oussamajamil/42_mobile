@@ -54,7 +54,7 @@ const HomeScreen = () => {
   });
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-red-500">
       <View
         className="flex relative items-center justify-end pb-4"
         style={{

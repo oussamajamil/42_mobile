@@ -102,7 +102,7 @@ export const getWithUserIdOrType = async (
       return {
         ...data,
         id: doc.id,
-        date: data.date ? convertFirestoreTimestampToDate(data.date) : null,
+        date: data?.date ? convertFirestoreTimestampToDate(data?.date) : null,
       };
     });
 

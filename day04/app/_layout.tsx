@@ -16,7 +16,6 @@ const LayoutApp = () => {
     if (isAuthenticated && !inApp) {
       router.replace("/(app)/home");
     } else if (!isAuthenticated) {
-      console.log("Redirect to /signIn");
       router.replace("welcome");
     } else {
       setIsAuthenticated(false);
