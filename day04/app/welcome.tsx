@@ -17,22 +17,14 @@ import { createTokenWithCode } from "@/utils/createTokenWithCode";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const discorvy = {
-  authorizationEndpoint: "https://github.com/login/oauth/authorize",
-  tokenEndpoint: "https://github.com/login/oauth/access_token",
-  revocationEndpoint: `https://github.com/settings/connections/applications/${process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID}`,
-};
 const Welcome = () => {
   const { setLoading } = useStore();
-  const [request, response, promptAsync] = useAuthRequest(
-    {
-      clientId: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID!,
-      clientSecret: process.env.EXPO_PUBLIC_GITHUB_CLIENT_SECRET,
-      scopes: [],
-      redirectUri: makeRedirectUri(),
-    },
-    discorvy
-  );
+  const [request, response, promptAsync] = useAuthRequest({
+    clientId: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID,
+    clientSecret: process.env.EXPO_PUBLIC_GITHUB_CLIENT_SECRET,
+    scopes: [],
+    redirectUri: makeRedirectUri(),
+  });
 
   async function signInWithGithub() {
     try {

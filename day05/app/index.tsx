@@ -10,7 +10,7 @@ const App = () => {
   const ref = React.useRef(null);
   return (
     <ScreenWrapper>
-      <View className="flex-1 items-center justify-center bg-red-500">
+      <View className="flex-1 items-center justify-center">
         {loading && (
           <ActivityIndicator size={"large"} color={theme.colors.primary} />
         )}

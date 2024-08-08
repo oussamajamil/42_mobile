@@ -6,7 +6,7 @@ interface AddNotesProps {
   onChanges: (show: boolean) => void;
 }
 const AddNotes = ({ show, onChanges }: AddNotesProps) => {
-  return <View className="flex flex-1 bg-red-500"></View>;
+  return <View className="flex flex-1"></View>;
 };
 
 export default AddNotes;
